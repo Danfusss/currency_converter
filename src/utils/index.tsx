@@ -1,10 +1,10 @@
 import dayjs from "dayjs";
 
-export function convertRubleTo({ rubleRate }) {
+export function convertCurrency({ rubleRate }) {
   return 1 / rubleRate;
 }
 
-export function calculationInterimDates(startDate, endDate, setInterimDates) {
+export function calculationInterimDates(startDate, endDate, setCuntDays) {
   const dates: string[] = [];
   let currentDate = dayjs(startDate);
   const currentEndDate = dayjs(endDate);
@@ -18,5 +18,5 @@ export function calculationInterimDates(startDate, endDate, setInterimDates) {
     currentDate = currentDate.add(1, "day");
   }
   console.log(dates);
-  setInterimDates(dates);
+  setCuntDays(dates);
 }

@@ -6,19 +6,18 @@ import { Box, Checkbox, FormControlLabel } from "@mui/material";
 import { currencyType } from "../App";
 
 interface CheckboxProps {
-  checkCurrent: string[];
-  setCheckCurrent: Dispatch<SetStateAction<currencyType[]>>;
+  arrayCurrency: string[];
+  setArrayCurrency: Dispatch<SetStateAction<currencyType[]>>;
 }
 
-function CheckboxList({ checkCurrent, setCheckCurrent }: CheckboxProps) {
+const CheckboxList = ({ arrayCurrency, setArrayCurrency }: CheckboxProps) => {
   const handleChange = (event) => {
     const { name, checked } = event.target;
-    setCheckCurrent((current) => {
+    setArrayCurrency((oldArrayCurrency) => {
       if (checked) {
-        return [...current, name];
-      } else {
-        return current.filter((item) => item !== name);
+        return [...oldArrayCurrency, name];
       }
+      return oldArrayCurrency.filter((item) => item !== name);
     });
   };
 
@@ -31,7 +30,7 @@ function CheckboxList({ checkCurrent, setCheckCurrent }: CheckboxProps) {
             sx={{ "& .MuiSvgIcon-root": { fontSize: 25 } }}
             onChange={handleChange}
             name="eur"
-            checked={checkCurrent.includes("eur")}
+            checked={arrayCurrency.includes("eur")}
           />
         }
       />
@@ -41,7 +40,7 @@ function CheckboxList({ checkCurrent, setCheckCurrent }: CheckboxProps) {
           <Checkbox
             sx={{ "& .MuiSvgIcon-root": { fontSize: 25 } }}
             onChange={handleChange}
-            checked={checkCurrent.includes("usd")}
+            checked={arrayCurrency.includes("usd")}
             name="usd"
           />
         }
@@ -52,13 +51,13 @@ function CheckboxList({ checkCurrent, setCheckCurrent }: CheckboxProps) {
           <Checkbox
             sx={{ "& .MuiSvgIcon-root": { fontSize: 25 } }}
             onChange={handleChange}
-            checked={checkCurrent.includes("cny")}
+            checked={arrayCurrency.includes("cny")}
             name="cny"
           />
         }
       />
     </Box>
   );
-}
+};
 
 export default CheckboxList;

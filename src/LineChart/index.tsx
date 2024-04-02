@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 
 import { Line } from "react-chartjs-2";
 import {
@@ -11,8 +11,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-
-import { Box } from "@mui/material";
+import { DataObject } from "../types";
 
 Chart.register(
   CategoryScale,
@@ -24,19 +23,12 @@ Chart.register(
   Legend
 );
 
-interface DataObject {
-  month: string;
-  eur: number;
-  usd: number;
-  cny: number;
-}
-
 interface LineChartProps {
   data: DataObject[];
   checkCurrent: string[];
 }
 
-const LineChart: React.FC<LineChartProps> = ({ data, checkCurrent }) => {
+const LineChart: FC<LineChartProps> = ({ data, checkCurrent }) => {
   const chartData = {
     labels: data.map((item) => item.month),
     datasets: [
@@ -67,11 +59,7 @@ const LineChart: React.FC<LineChartProps> = ({ data, checkCurrent }) => {
     ],
   };
 
-  return (
-    <Box sx={{ width: "70vw", height: "50vh" }}>
-      <Line data={chartData} />
-    </Box>
-  );
+  return <Line data={chartData} />;
 };
 
 export default LineChart;

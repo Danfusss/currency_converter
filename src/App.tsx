@@ -1,87 +1,88 @@
 import React from "react";
 import { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
-import axios from "axios";
+
 import dayjs from "dayjs";
 
-import { calculationInterimDates, convertRubleTo } from "./utils";
-import CheckboxList from "./ChekboxList";
-import DatePickerViews from "./DataPicker";
+import { calculationInterimDates } from "./utils";
+import CheckboxList from "./CheckboxList";
+import DateFilter from "./DataPicker";
 import LineChart from "./LineChart";
 
 import dayjsPluginUTC from "dayjs-plugin-utc";
-import gettingData from "./api/gettingData";
+
 import getCurrency from "./api/gettingData";
+import { DataObject, currencyType } from "./types";
+
 dayjs.extend(dayjsPluginUTC);
 const dayjsWithUTC = dayjs as unknown as typeof dayjs & {
   utc: typeof dayjsPluginUTC;
 };
 
-export type currencyType = "eur" | "usd" | "cny";
-export interface DataObject {
-  month: string;
-  eur: number;
-  usd: number;
-  cny: number;
-}
+const defaultEndDate = dayjsWithUTC.utc().startOf("day");
+const defaultStartDate = dayjsWithUTC.utc().subtract(6, "day").startOf("day");
 
-function App() {
-  const originalStartingTime = dayjsWithUTC.utc().startOf("day");
-  const originalEndingTime = dayjsWithUTC
-    .utc()
-    .subtract(6, "day")
-    .startOf("day");
-  const [checkCurrent, setCheckCurrent] = useState<Array<currencyType>>([]);
-  const [startDate, setStartDate] = useState(originalEndingTime);
-  const [endDate, setEndDate] = useState(originalStartingTime);
-  const [interimDates, setInterimDates] = useState<string[]>([]);
+const App = () => {
+  const [arrayCurrency, setArrayCurrency] = useState<Array<currencyType>>([]);
+  const [startDate, setStartDate] = useState(defaultStartDate);
+  const [endDate, setEndDate] = useState(defaultEndDate);
+  const [countDays, setCuntDays] = useState<string[]>([]);
   const [data, setData] = useState<DataObject[]>([]);
-  const [request, setRequest] = useState(0);
+  const [countRequest, setCountRequest] = useState(0);
 
   useEffect(() => {
-    calculationInterimDates(startDate, endDate, setInterimDates);
+    if (endDate && endDate) {
+      calculationInterimDates(startDate, endDate, setCuntDays);
+    }
   }, [endDate, startDate]);
 
   useEffect(() => {
-    getCurrency(setRequest, interimDates, setData);
-  }, [interimDates]);
+    getCurrency(setCountRequest, countDays, setData);
+  }, [countDays]);
 
   return (
-    <Box
-      sx={{
-        width: "80vw",
-        height: "50vh",
-        display: "flex",
-        alignItems: "center",
-        marginLeft: "15rem",
-        marginTop: "5rem",
-      }}
-    >
+    // Что бы не задавать для бади)
+    <Box sx={{ width: "100%", height: "90vh" }}>
       <Box
         sx={{
-          width: "30vw",
-          height: "40vh",
+          width: "100%",
+          height: "100%",
           display: "flex",
-          flexDirection: "column",
-          alignContent: "center",
-          justifyContent: "space-around",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        <CheckboxList
-          checkCurrent={checkCurrent}
-          setCheckCurrent={setCheckCurrent}
-        />
-        <DatePickerViews
-          startDate={startDate}
-          setStartDate={setStartDate}
-          endDate={endDate}
-          setEndDate={setEndDate}
-        />
-        <Typography variant="h5">Число запросов в API: {request}</Typography>
+        <Box
+          sx={{
+            width: "30vw",
+            height: "40vh",
+            display: "flex",
+            flexDirection: "column",
+            alignContent: "center",
+            justifyContent: "space-around",
+          }}
+        >
+          <CheckboxList
+            arrayCurrency={arrayCurrency}
+            setArrayCurrency={setArrayCurrency}
+          />
+          <DateFilter
+            startDate={startDate}
+            setStartDate={setStartDate}
+            endDate={endDate}
+            setEndDate={setEndDate}
+          />
+          <Typography variant="h5">
+            {`Число запросов в API: ${countRequest}`}
+          </Typography>
+        </Box>
+        <Box sx={{ width: "45vw", height: "50vh" }}>
+          <LineChart data={data} checkCurrent={arrayCurrency} />
+        </Box>
       </Box>
-      <LineChart data={data} checkCurrent={checkCurrent} />
     </Box>
   );
-}
+};
 
 export default App;
