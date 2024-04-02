@@ -1,6 +1,6 @@
 import axios from "axios";
 import { convertRubleTo } from "../utils";
-import React, { Dispatch, SetStateAction } from "react"; // Make sure to import React and its types
+import React, { Dispatch, SetStateAction } from "react";
 import { DataObject } from "../App";
 
 const getCurrency = async (
