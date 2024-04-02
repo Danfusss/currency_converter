@@ -1,10 +1,10 @@
+import React from "react";
+
+import { Box } from "@mui/material";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { useState } from "react";
-import React from "react";
-import { Box } from "@mui/material";
 
 const DatePickerViews = ({ startDate, setStartDate, endDate, setEndDate }) => {
   return (

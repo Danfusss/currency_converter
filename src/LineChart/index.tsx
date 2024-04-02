@@ -1,4 +1,5 @@
 import React from "react";
+
 import { Line } from "react-chartjs-2";
 import {
   Chart,
@@ -10,6 +11,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+
 import { Box } from "@mui/material";
 
 Chart.register(
