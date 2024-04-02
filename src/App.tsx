@@ -11,6 +11,7 @@ import LineChart from "./LineChart";
 
 import dayjsPluginUTC from "dayjs-plugin-utc";
 import gettingData from "./api/gettingData";
+import getCurrency from "./api/gettingData";
 dayjs.extend(dayjsPluginUTC);
 const dayjsWithUTC = dayjs as unknown as typeof dayjs & {
   utc: typeof dayjsPluginUTC;
@@ -42,7 +43,7 @@ function App() {
   }, [endDate, startDate]);
 
   useEffect(() => {
-    gettingData(interimDates, setRequest, setData);
+    getCurrency(setRequest, interimDates, setData);
   }, [interimDates]);
 
   return (
