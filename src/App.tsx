@@ -9,6 +9,13 @@ import CheckboxList from "./ChekboxList";
 import DatePickerViews from "./DataPicker";
 import LineChart from "./LineChart";
 
+import dayjsPluginUTC from "dayjs-plugin-utc";
+import gettingData from "./api/gettingData";
+dayjs.extend(dayjsPluginUTC);
+const dayjsWithUTC = dayjs as unknown as typeof dayjs & {
+  utc: typeof dayjsPluginUTC;
+};
+
 export type currencyType = "eur" | "usd" | "cny";
 export interface DataObject {
   month: string;
@@ -18,9 +25,14 @@ export interface DataObject {
 }
 
 function App() {
+  const originalStartingTime = dayjsWithUTC.utc().startOf("day");
+  const originalEndingTime = dayjsWithUTC
+    .utc()
+    .subtract(6, "day")
+    .startOf("day");
   const [checkCurrent, setCheckCurrent] = useState<Array<currencyType>>([]);
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  const [startDate, setStartDate] = useState(originalEndingTime);
+  const [endDate, setEndDate] = useState(originalStartingTime);
   const [interimDates, setInterimDates] = useState<string[]>([]);
   const [data, setData] = useState<DataObject[]>([]);
   const [request, setRequest] = useState(0);
@@ -30,36 +42,7 @@ function App() {
   }, [endDate, startDate]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const dataPromises = interimDates.map(async (date) => {
-          setRequest((prevCount) => prevCount + 1);
-          const url = `https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@${date}/v1/currencies/rub.json`;
-          const response = await axios.get(url);
-          const rates = response.data;
-          const { usd, eur, cny } = rates["rub"];
-          const USD = Number(convertRubleTo({ rubleRate: usd }));
-          const EUR = Number(convertRubleTo({ rubleRate: eur }));
-          const CNY = Number(convertRubleTo({ rubleRate: cny }));
-          return {
-            month: date,
-            eur: EUR,
-            usd: USD,
-            cny: CNY,
-          };
-        });
-
-        const data = await Promise.all(dataPromises);
-        data.sort(
-          (a, b) => new Date(a.month).getTime() - new Date(b.month).getTime()
-        );
-        setData(data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
+    gettingData(interimDates, setRequest, setData);
   }, [interimDates]);
 
   return (

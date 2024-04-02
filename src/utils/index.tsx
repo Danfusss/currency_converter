@@ -5,9 +5,10 @@ export function convertRubleTo({ rubleRate }) {
 }
 
 export function calculationInterimDates(startDate, endDate, setInterimDates) {
-  const dates = [];
+  const dates: string[] = [];
   let currentDate = dayjs(startDate);
   const currentEndDate = dayjs(endDate);
+  console.log(currentDate, currentEndDate);
 
   while (
     currentDate.isBefore(endDate) ||
@@ -16,5 +17,6 @@ export function calculationInterimDates(startDate, endDate, setInterimDates) {
     dates.push(currentDate.format("YYYY-MM-DD"));
     currentDate = currentDate.add(1, "day");
   }
+  console.log(dates);
   setInterimDates(dates);
 }
